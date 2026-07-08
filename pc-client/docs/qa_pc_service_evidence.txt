@@ -1,0 +1,29 @@
+﻿QA PC service evidence generated_at=2026-07-07 00:02:02
+Evidence scope: no code changes; in-memory DB for service checks; real TCP for ACK check.
+
+[Configuration]
+platform_target=127.0.0.1:9100
+ack_timeout_seconds=3.0
+runtime_auto_save_enabled=True
+runtime_save_interval_seconds=30
+upload_queue=offline cache/resend: pending=0, failed_retry=0, duplicate_skipped=0, uploaded=0. Same fingerprint packet is sent only once per batch; resend/retry is not duplicate upload.
+
+[Duplicate payload]
+duplicate_payload_result={'success': True, 'processed': 2, 'uploaded': 1, 'failed': 0, 'skipped': 1}
+duplicate_payload_send_calls=1
+duplicate_payload_task_statuses=uploaded,skipped
+duplicate_payload_last_errors=ACK | duplicate packet skipped: aadb307b1aff
+
+[Retry no loss]
+retry_no_loss_result={'success': True, 'processed': 2, 'uploaded': 0, 'failed': 1, 'skipped': 1}
+retry_no_loss_send_calls=1
+retry_no_loss_task_statuses=pending,pending
+retry_no_loss_last_errors=mock missing ACK | same-batch duplicate deferred for next retry: aadb307b1aff
+
+[ACK]
+ack_send_success=True
+ack_response=##0075QN=20260707000203468;ST=91;CN=9014;PW=123456;MN=A110000_0001;Flag=8;CP=&&&&9D41
+last_packet='##0186QN=20260707000203468;ST=21;CN=2011;PW=123456;MN=A110000_0001;Flag=9;CP=&&DataTime=20260706103000;w01010-Rtd=28.6,w01010-Flag=N;w01014-Rtd=6.5,w01014-Flag=N;w01001-Rtd=7.8,w01001-Flag=N&&4540\r\n'
+runtime_connection=connected
+runtime_last_result=ack
+runtime_ack_received=True

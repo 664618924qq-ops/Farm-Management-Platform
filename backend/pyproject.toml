@@ -1,0 +1,27 @@
+[project]
+name = "livestock-monitor-backend"
+version = "0.1.0"
+description = "Backend service for the livestock monitoring platform"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.116.1",
+  "sqlalchemy>=2.0.41",
+  "uvicorn>=0.35.0",
+  "pydantic>=2.11.7",
+  "python-multipart>=0.0.20",
+  "pymysql>=1.1.1"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.4.1",
+  "httpx>=0.28.1"
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

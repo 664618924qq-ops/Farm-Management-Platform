@@ -1,0 +1,24 @@
+﻿PC optimization QA evidence - time alignment samples
+
+Rule:
+- The PC client floors the collected time down to the nearest configured save interval boundary.
+- The rule never rounds into a future timestamp.
+
+QA accepted samples:
+- 30s: 12:40:11.321 -> aligned_collected_at=2026-07-07T12:40:00 -> DataTime=20260707124000
+- 30s: 12:40:44.321 -> aligned_collected_at=2026-07-07T12:40:30 -> DataTime=20260707124030
+- 60s: 12:40:44.321 -> aligned_collected_at=2026-07-07T12:40:00 -> DataTime=20260707124000
+
+Local DB / upload packet consistency:
+- aligned_collected_at is used for local TelemetryRecord.collected_at.
+- The same aligned_collected_at is written into UploadTask.payload_json as payload_json.collected_at.
+- HJ212 DataTime is generated from the upload packet payload_json.collected_at.
+
+Packet samples:
+- 30s / :00 boundary: DataTime=20260707124000; w01010-Rtd=0.0,w01010-Flag=N; w01014-Rtd=0.0,w01014-Flag=N
+- 30s / :30 boundary: DataTime=20260707124030; w01010-Rtd=0.0,w01010-Flag=N; w01014-Rtd=0.0,w01014-Flag=N
+- 60s / minute boundary: DataTime=20260707124000; w01010-Rtd=0.0,w01010-Flag=N; w01014-Rtd=0.0,w01014-Flag=N
+
+Evidence status:
+- This file is ASCII/UTF-8 readable text for QA packaging.
+- PC business code remains frozen; this update only repairs evidence-file readability.

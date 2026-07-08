@@ -1,0 +1,49 @@
+# Runtime secrets and local configuration
+.env
+*.local
+pc-client/.env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/tsconfig.tsbuildinfo
+npm-debug.log*
+
+# Local databases and generated runtime files
+*.db
+*.sqlite
+*.sqlite3
+backend/acceptance_smoke_*.db
+backend/test_livestock_monitor*.db
+backend/debug_*.db
+backend/verify_tcp_*.db
+pc-client/.tmp/
+
+# Logs, reports, and acceptance outputs generated on this machine
+logs/
+reports/
+*.log
+
+# Delivery and staging artifacts
+*.zip
+delivery/
+package-staging/
+user-acceptance-staging/
+optimized-acceptance-staging/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/

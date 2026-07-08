@@ -1,0 +1,32 @@
+﻿PC optimization QA evidence - responsiveness / anti-stutter
+
+Evidence time: 2026-07-07 12:43-12:45 Asia/Shanghai
+Code state: PC code frozen; no code files changed during this evidence run.
+
+Manual run used for evidence:
+- Working directory: C:\Users\DELL\Documents\Codex project\pc-client
+- Runtime command: D:\pamGo\个人\codex项目\养虾监测工具\backend\.venv\Scripts\python.exe -m desktop_app.main
+- Reason: pc-client/.venv is not packaged; using the already verified source virtualenv avoids creating dependencies while still loading pc-client code from the package directory.
+- Evidence process id observed: 44776
+
+Observed GUI behavior:
+- New current-code window first appeared briefly as "养虾监测软件 (未响应)" during startup initialization.
+- After an additional ~10 seconds, Windows title recovered to "养虾监测软件" and the window accepted navigation.
+- Manual navigation completed without triggering collect/upload: 首页 -> 参数设置 -> 数据分析.
+- Captured screenshots show current-code homepage trend panel, interval dropdown, and analysis readability.
+
+Original likely stutter roots from code inspection:
+- Auto collect previously ran service.auto_collect_* directly on the GUI thread.
+- Manual upload previously ran service.upload_pending_tasks directly on the GUI thread.
+- Manual selected-device collection previously ran service.trigger_collect directly on the GUI thread.
+- Dashboard refresh previously fetched upload tasks twice and forced query-page refresh even when the user was not on the query page.
+
+Current mitigation in code:
+- desktop_app/ui/main_window.py uses BackgroundTask / QThreadPool for selected collection, auto collect, and pending upload.
+- auto_collect_running skips a timer tick if the previous auto-collect round is still running, avoiding duplicate packets and reentrancy.
+- upload_running disables duplicate manual upload clicks while upload is already in progress.
+- refresh_dashboard now reuses upload_rows and only calls run_query() when the current page is the data-query page.
+
+Residual QA note:
+- This evidence run did not trigger live collect/upload to avoid changing staging data.
+- Startup can still show a short transient "not responding" while the app initializes DB/service state; after recovery, page navigation was responsive in the observed run.

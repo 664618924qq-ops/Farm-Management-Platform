@@ -1,0 +1,53 @@
+Product: Livestock Monitoring Optimized Acceptance Candidate
+PackageVersion: 0.3.0-optimized-acceptance-candidate
+PackageDate: 2026-07-07
+PackageStatus: optimized acceptance-ready candidate / evidence included
+
+Lineage:
+- Previous signed baseline package: livestock-monitor-user-acceptance-package-20260707-0041.zip
+- This package must not overwrite the previous baseline.
+
+AcceptanceEndpoint: 127.0.0.1:9100
+RequiredAck: HJ212 CN=9014
+BackendHttp: http://127.0.0.1:8000
+WebFrontend: http://127.0.0.1:5173
+MySQL: 127.0.0.1:3306
+
+PlatformBackend: backend/ pyproject version 0.1.0
+PlatformFrontend: frontend/package.json version 0.1.0
+PcClient: included under pc-client/
+DatabaseInit: backend/scripts/init_mysql.py
+DatabaseMigration: backend/app/db/schema.py
+
+OptimizedChangeScope:
+- PC client: 30/60 second save interval dropdown, homepage trend evidence, analysis page evidence, aligned DataTime samples, responsiveness evidence.
+- Platform: backend/TCP restart required before acceptance, new-data time fix evidence, realtime/analysis data from database, protocol log default time and multi-condition query.
+- Data analysis and quality: real database data source, quality labels, alerts and SMS dry-run/noop reservation.
+- Time policy: historical 8-hour bad-time records are not backfilled; verify only newly received data after backend/TCP restart.
+- Demo policy: seed/demo data must not be used as the real acceptance basis.
+
+StandardSource: surface_water_technical_requirements_2019_trial
+StandardSourceDir: D:\pamGo\工程项目\ZEUSS_DIR国家水站项目\文档\地表水技术要求
+WaterQualityStandardCode: GB3838-2002
+AuxiliaryStandardCode: GB11607-1989
+
+SmsProviderDefault: noop
+SmsEnabledDefault: false
+SmsDeliveryStatus: dry-run/noop only; real SMS provider integration is reserved for later delivery.
+
+EvidenceIncluded:
+- logs/acceptance/tcp-acceptance-20260707-132313.json
+- pc-client/docs/qa_pc_optimization_home_trend_current_20260707.png
+- pc-client/docs/qa_pc_optimization_interval_dropdown_20260707.png
+- pc-client/docs/qa_pc_optimization_analysis_current_20260707.png
+- pc-client/docs/qa_pc_optimization_time_alignment_20260707.txt
+- pc-client/docs/qa_pc_optimization_responsiveness_20260707.txt
+- logs/acceptance/tcp-acceptance-20260707-124843.json
+- logs/acceptance/tcp-acceptance-20260707-124848.json
+- docs/product/progress-log.md
+- ACCEPTANCE_EVIDENCE_MANIFEST.md
+
+PreflightCommand: powershell -NoProfile -ExecutionPolicy Bypass -File .\check-env.ps1
+PortCheckCommand: powershell -NoProfile -ExecutionPolicy Bypass -File .\check-ports.ps1
+AcceptanceGateCommand: powershell -NoProfile -ExecutionPolicy Bypass -File .\check-acceptance.ps1 -SkipStartup
+RealTcpAcceptanceCommand: .\backend\.venv\Scripts\python.exe tools\acceptance_smoke.py --mode tcp --host 127.0.0.1 --port 9100 --api-base http://127.0.0.1:8000/api/v1
